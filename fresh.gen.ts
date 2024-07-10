@@ -2,13 +2,29 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
+import * as $auth_middleware from "./routes/auth/_middleware.ts";
+import * as $auth_secret from "./routes/auth/secret.tsx";
+import * as $cadastra from "./routes/cadastra.tsx";
+import * as $cookie from "./routes/cookie.ts";
+import * as $index from "./routes/index.tsx";
+import * as $login from "./routes/login.tsx";
+import * as $logout from "./routes/logout.tsx";
+import * as $singup from "./routes/singup.tsx";
 
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
-    "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
+    "./routes/auth/_middleware.ts": $auth_middleware,
+    "./routes/auth/secret.tsx": $auth_secret,
+    "./routes/cadastra.tsx": $cadastra,
+    "./routes/cookie.ts": $cookie,
+    "./routes/index.tsx": $index,
+    "./routes/login.tsx": $login,
+    "./routes/logout.tsx": $logout,
+    "./routes/singup.tsx": $singup,
   },
   islands: {},
   baseUrl: import.meta.url,
