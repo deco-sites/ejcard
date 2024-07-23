@@ -12,10 +12,10 @@ import * as $cadastra from "./routes/cadastra.tsx";
 import * as $consulta from "./routes/consulta.tsx";
 import * as $cookie from "./routes/cookie.ts";
 import * as $financas from "./routes/financas.tsx";
-import * as $index from "./routes/menu.tsx";
 import * as $listaProdutos from "./routes/listaProdutos.tsx";
 import * as $login from "./routes/login.tsx";
 import * as $logout from "./routes/logout.tsx";
+import * as $menu from "./routes/menu.tsx";
 import * as $produtos from "./routes/produtos.tsx";
 import * as $recarga from "./routes/recarga.tsx";
 import * as $signup from "./routes/signup.tsx";
@@ -39,10 +39,10 @@ const manifest = {
     "./routes/consulta.tsx": $consulta,
     "./routes/cookie.ts": $cookie,
     "./routes/financas.tsx": $financas,
-    "./routes/index.tsx": $index,
     "./routes/listaProdutos.tsx": $listaProdutos,
     "./routes/login.tsx": $login,
     "./routes/logout.tsx": $logout,
+    "./routes/menu.tsx": $menu,
     "./routes/produtos.tsx": $produtos,
     "./routes/recarga.tsx": $recarga,
     "./routes/signup.tsx": $signup,
