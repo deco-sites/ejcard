@@ -1,6 +1,8 @@
-
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
-import { SupabaseClient, createClient } from "https://esm.sh/@supabase/supabase-js";
+import {
+  createClient,
+  SupabaseClient,
+} from "https://esm.sh/@supabase/supabase-js";
 import { getCookies } from "../routes/cookie.ts";
 
 export interface State {
@@ -8,10 +10,13 @@ export interface State {
   supabaseClient: SupabaseClient<any, "public", any>;
 }
 
-export async function handler(req: Request, ctx: MiddlewareHandlerContext<State>) {
+export async function handler(
+  req: Request,
+  ctx: MiddlewareHandlerContext<State>,
+) {
   const client = createClient(
     Deno.env.get("SUPABASE_URL") || "",
-    Deno.env.get("SUPABASE_KEY") || ""
+    Deno.env.get("SUPABASE_KEY") || "",
   );
 
   ctx.state.supabaseClient = client;

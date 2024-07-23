@@ -10,5 +10,5 @@ export const handler: Handlers = {
       status: 303,
       headers,
     });
-  }
-}
+  },
+};
