@@ -1,79 +1,325 @@
+import { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js";
+import RealInput from "../islands/RealInput.tsx";
 
-import { Handlers, PageProps } from "$fresh/server.ts";
-import { State } from "./_middleware.ts";
+export type Card = {
+  name: string;
+  phone: string;
+  card_number: string;
+  balance: number;
+};
 
+type CreatedCardResponse = {
+  card: Card;
+  errorMessage?: string;
+};
 
-export const handler: Handlers<any, State> = {
-  async POST(req, ctx) {
-    const form = await req.formData();
-    const name = form.get("name") as string;
-    const phone = form.get("phone") as string;
-    const balance = form.get("balance") as string;
+export const handler: Handlers<any, CreatedCardResponse> = {
+  POST: async (req: Request, _ctx: HandlerContext<CreatedCardResponse>) => {
+    const client = createClient(
+      "https://bcqocegiolbnjypvtmjp.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjcW9jZWdpb2xibmp5cHZ0bWpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTkwMDQxNjksImV4cCI6MjAzNDU4MDE2OX0.pe6jTzbxhpYVEubqqtwPSM8wwSZTBSGpG10tpjcc3mE",
+    );
 
-    const cardId = generateCardId();
+    const body = await req.formData();
+    const bodyAsJson = Object.fromEntries(body.entries()) as {
+      name: string;
+      balance: string;
+      card_number: string;
+      phone: string;
+    };
 
- 
-    const { data, error } = await ctx.state.supabaseClient
+    const card = {
+      ...bodyAsJson,
+      balance: parseFloat(
+        bodyAsJson.balance?.replace("R$ ", "").replace(",", "."),
+      ),
+    };
+
+    const { data: existingCards, error: fetchError } = await client
       .from("cards")
-      .insert([{ id: cardId, name, phone: phone, balance: Number(balance) }]);
+      .select("card_number")
+      .eq("card_number", card.card_number);
 
-
-    const headers = new Headers();
-    let redirect = "/";
-    if (error) {
-      redirect = `/signup?error=${error.message}`;
+    if (fetchError) {
+      return _ctx.render({
+        errorMessage: `Erro ao verificar cartão: ${fetchError.message}`,
+        card,
+      });
     }
-    headers.set("location", redirect);
-    return new Response(null, {
-      status: 303,
-      headers,
-    });
-  }
-}
 
+    if (existingCards && existingCards.length > 0) {
+      return _ctx.render({
+        errorMessage: `Cartão ${card.card_number} já cadastrado.`,
+        card,
+      });
+    }
 
-function generateCardId(): string {
-  return `card-${Date.now()}`;
-}
+    const { data, error } = await client.from("cards").insert(card).select();
 
+    if (error) {
+      return _ctx.render({
+        errorMessage: `Ocorreu um erro ao salvar o cartão: ${error.message}`,
+        card,
+      });
+    }
 
-export default function SignUp(props: PageProps) {
-  const err = props.url.searchParams.get("error");
+    const createdCard = data[0] as Card;
+
+    return _ctx.render({ card: createdCard });
+  },
+};
+
+export default function NewCard(props: PageProps<CreatedCardResponse>) {
+  const hasError = !!props?.data?.errorMessage;
+  const hasSuccess = !!props?.data?.card && !hasError;
 
   return (
-    <section className="bg-gray-200">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="mx-auto">
-          <h2 className="text-2xl font-bold mb-5 text-center">Create Debit Card</h2>
-        </div>
-
-        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            {err && (
-              <div className="bg-red-400 border-l-4 p-4" role="alert">
-                <p className="font-bold">Error</p>
-                <p>{err}</p>
-              </div>
-            )}
-            <form className="space-y-4 md:space-y-6" method="POST">
-              <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium">Name</label>
-                <input type="text" name="name" id="name" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John Doe" />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block mb-2 text-sm font-medium">Phone Number</label>
-                <input type="tel" name="phone" id="phone" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-456-7890" />
-              </div>
-              <div>
-                <label htmlFor="balance" className="block mb-2 text-sm font-medium">Balance</label>
-                <input type="number" name="balance" id="balance" className="border border-gray-300 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="100.00" />
-              </div>
-              
-              <button type="submit" className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create Card</button>
-            </form>
+    <div className="container">
+      <div className="message-box">
+        {hasSuccess && (
+          <div className="success-message">
+            <h2>Cartão Cadastrado com Sucesso!</h2>
+            <div className="card-info">
+              <p>
+                <strong>Número do Cartão:</strong> {props.data.card.card_number}
+              </p>
+              <p>
+                <strong>Nome:</strong> {props.data.card.name}
+              </p>
+              <p>
+                <strong>Telefone:</strong> {props.data.card.phone}
+              </p>
+              <p>
+                <strong>Saldo Atual:</strong> R${" "}
+                {(props.data.card.balance / 100).toFixed(2)}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
+        {hasError && (
+          <div className="error-message">
+            <span>{props.data?.errorMessage}</span>
+          </div>
+        )}
       </div>
-    </section>
+
+      <div className="form-container">
+        <h1>Criar Cartão</h1>
+        <form method="POST">
+          <div className="form-group">
+            <label htmlFor="name">Nome Completo</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="input-field"
+              placeholder="ex: Maria das Graças"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="card_number">Número do Cartão*</label>
+            <input
+              type="number"
+              name="card_number"
+              id="card_number"
+              className="input-field"
+              placeholder="ex: 169"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Celular</label>
+            <input
+              name="phone"
+              id="phone"
+              className="input-field"
+              value="(83) 9"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="balance">Crédito Inicial</label>
+            <RealInput
+              name="balance"
+              id="balance"
+              classes="input-field"
+            />
+          </div>
+          <div className="button-container">
+            <button
+              type="submit"
+              className="button-primary"
+            >
+              Cadastrar
+            </button>
+          </div>
+          <div className="button-container">
+            <a
+              href="/"
+              className="button-primary"
+            >
+              Voltar
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <style jsx>
+        {`
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgba(220, 100, 100, 0.95); 
+    padding: 16px;
+  }
+
+  .form-container {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    margin-bottom: 16px;
+    font-size: 24px;
+    text-align: center;
+    color: #111827;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .footer-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #111827;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #D1D5DB;
+    border-radius: 4px;
+    margin-left: -5px;
+  }
+
+  .input-field:focus {
+    border-color: #3B82F6;
+    outline: none;
+  }
+
+  .submit-button, .back-button, .sale-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    margin: 5px; /* Adiciona espaçamento uniforme entre os botões */
+  }
+
+  .submit-button {
+    background-color: #4B5563;
+    color: #FFFFFF;
+  }
+
+  .submit-button:hover {
+    background-color: #6B7280;
+  }
+
+  .back-button {
+    background-color: #D1D5DB;
+    color: #111827;
+  }
+
+  .back-button:hover {
+    background-color: #B1B5B9;
+  }
+
+  .sale-button {
+    background-color: #3B82F6;
+    color: #FFFFFF;
+  }
+
+  .sale-button:hover {
+    background-color: #2563EB;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .button-primary {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #4B5563;
+    color: #FFFFFF;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  .button-primary:hover {
+    background-color: #6B7280;
+  }
+  
+  .message-box {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+  }
+
+  .success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #c3e6cb;
+    margin-bottom: 16px;
+  }
+
+  .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+  }
+
+  .card-info {
+    margin-top: 10px;
+  }
+
+  .card-info p {
+    margin: 8px 0;
+  }
+
+`}
+      </style>
+    </div>
   );
 }

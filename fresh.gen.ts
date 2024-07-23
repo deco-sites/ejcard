@@ -3,30 +3,58 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $api_recarga from "./routes/api/recarga.ts";
+import * as $api_venda from "./routes/api/venda.ts";
+import * as $apurado from "./routes/apurado.tsx";
 import * as $auth_middleware from "./routes/auth/_middleware.ts";
 import * as $auth_secret from "./routes/auth/secret.tsx";
 import * as $cadastra from "./routes/cadastra.tsx";
+import * as $consulta from "./routes/consulta.tsx";
 import * as $cookie from "./routes/cookie.ts";
-import * as $index from "./routes/index.tsx";
+import * as $financas from "./routes/financas.tsx";
+import * as $index from "./routes/menu.tsx";
+import * as $listaProdutos from "./routes/listaProdutos.tsx";
 import * as $login from "./routes/login.tsx";
 import * as $logout from "./routes/logout.tsx";
-import * as $singup from "./routes/singup.tsx";
-
+import * as $produtos from "./routes/produtos.tsx";
+import * as $recarga from "./routes/recarga.tsx";
+import * as $signup from "./routes/signup.tsx";
+import * as $venda from "./routes/venda.tsx";
+import * as $Counter from "./islands/Counter.tsx";
+import * as $RealInput from "./islands/RealInput.tsx";
+import * as $RealizarVenda from "./islands/RealizarVenda.tsx";
+import * as $RecargaCard from "./islands/RecargaCard.tsx";
+import * as $VendaCardIsland from "./islands/VendaCardIsland.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_middleware.ts": $_middleware,
+    "./routes/api/recarga.ts": $api_recarga,
+    "./routes/api/venda.ts": $api_venda,
+    "./routes/apurado.tsx": $apurado,
     "./routes/auth/_middleware.ts": $auth_middleware,
     "./routes/auth/secret.tsx": $auth_secret,
     "./routes/cadastra.tsx": $cadastra,
+    "./routes/consulta.tsx": $consulta,
     "./routes/cookie.ts": $cookie,
+    "./routes/financas.tsx": $financas,
     "./routes/index.tsx": $index,
+    "./routes/listaProdutos.tsx": $listaProdutos,
     "./routes/login.tsx": $login,
     "./routes/logout.tsx": $logout,
-    "./routes/singup.tsx": $singup,
+    "./routes/produtos.tsx": $produtos,
+    "./routes/recarga.tsx": $recarga,
+    "./routes/signup.tsx": $signup,
+    "./routes/venda.tsx": $venda,
   },
-  islands: {},
+  islands: {
+    "./islands/Counter.tsx": $Counter,
+    "./islands/RealInput.tsx": $RealInput,
+    "./islands/RealizarVenda.tsx": $RealizarVenda,
+    "./islands/RecargaCard.tsx": $RecargaCard,
+    "./islands/VendaCardIsland.tsx": $VendaCardIsland,
+  },
   baseUrl: import.meta.url,
 } satisfies Manifest;
 

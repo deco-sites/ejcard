@@ -27,12 +27,6 @@
     "blockType": "sections",
     "__resolveType": "site/sections/Theme/Theme.tsx"
   },
-  "/.deco/blocks/pages-Start-15553.json": {
-    "name": "Home",
-    "path": "/",
-    "blockType": "pages",
-    "__resolveType": "website/pages/Page.tsx"
-  },
   "/.deco/blocks/site.json": {
     "blockType": "apps",
     "__resolveType": "site/apps/site.ts"
@@ -44,5 +38,11 @@
   "/.deco/blocks/deco-htmx.json": {
     "blockType": "apps",
     "__resolveType": "site/apps/deco/htmx.ts"
+  },
+  "/.deco/blocks/pages-Home-364736.json": {
+    "name": "Home",
+    "path": "/",
+    "blockType": "pages",
+    "__resolveType": "website/pages/Page.tsx"
   }
 }
