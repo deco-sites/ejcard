@@ -5,7 +5,7 @@ export default function LoginSection() {
         <img src="image.png" alt="Logo" className="logo" />
       </div>
       <div className="message-box">
-        <h1>OUTBOX Testn</h1>
+        <h1>OUTBOX Trindade</h1>
         <a href="/login" className="button">Login</a>
       </div>
       <style jsx>
