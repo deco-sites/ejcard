@@ -1,8 +1,14 @@
+import { h } from "preact";
+
 interface NavProps {
   loggedIn: boolean;
 }
 
 export default function Nav({ loggedIn }: NavProps) {
+  const menus = [
+    { name: "Home", href: "/menu" },
+  ];
+
   const loggedInMenus = [
     { name: "Secret", href: "/auth/secret" },
     { name: "Logout", href: "/logout" },
@@ -13,13 +19,16 @@ export default function Nav({ loggedIn }: NavProps) {
     { name: "Produtos", href: "/produtos" },
     { name: "ListaProdutos", href: "/listaProdutos" },
     { name: "Apurado", href: "/apurado" },
-    { name: "index", href: "/index" },
+    { name: "Financas", href: "/financas" },
   ];
 
   const loggedOutMenus = [
     { name: "Login", href: "/login" },
     { name: "Signup", href: "/signup" },
   ];
+
+  // Escolha o menu baseado no estado de login
+  const menuItems = loggedIn ? loggedInMenus : loggedOutMenus;
 
   return (
     <nav>

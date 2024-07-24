@@ -29,6 +29,13 @@ export default function Home(props: PageProps) {
           )
           : (
             <>
+              <div className="logo-box">
+                <img src="image.png" alt="Logo" className="logo" />
+              </div>
+              <div className="message-box">
+                <h1>OUTBOX Trindade</h1>
+                <a href="/login" className="button">Login</a>
+              </div>
             </>
           )}
       </div>

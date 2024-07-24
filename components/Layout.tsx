@@ -7,16 +7,16 @@ interface LayoutProps {
   children: ComponentChildren;
 }
 
-export default function Layout(props: LayoutProps) {
+export default function Layout({ isLoggedIn, children }: LayoutProps) {
   return (
     <div>
       <Head>
         <title>Fresh</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Nav loggedIn={props.isLoggedIn} />
+      <Nav loggedIn={isLoggedIn} />
       <div class="p-4 mx-auto max-w-screen-md">
-        {props.children}
+        {children}
       </div>
     </div>
   );
