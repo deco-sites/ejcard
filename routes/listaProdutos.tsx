@@ -110,7 +110,7 @@ export default function ProductsPage(props: PageProps<ProductsResponse>) {
 
   return (
     <div className="products-page">
-      <a href="/" className="back-button">Voltar</a>
+      <a href="/menu" className="back-button">Voltar</a>
       <h1>Lista de Produtos</h1>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <ul className="products-list">

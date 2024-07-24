@@ -135,7 +135,7 @@ export default function NewProduct(props: PageProps<CreatedProductResponse>) {
             </button>
           </div>
           <div className="button-container">
-            <a href="/" className="button-primary">Voltar</a>
+            <a href="/menu" className="button-primary">Voltar</a>
           </div>
         </form>
       </div>

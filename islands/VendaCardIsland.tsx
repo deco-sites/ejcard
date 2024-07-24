@@ -60,7 +60,7 @@ const VendaCardIsland = ({ produtos }: { produtos: Produto[] }) => {
 
   const handleRemoveFromCart = (produtoId: number) => {
     setCart((prevCart) => {
-      const { [produtoId]: removedItem, ...remainingCart } = prevCart;
+      const { [produtoId]: _removedItem, ...remainingCart } = prevCart;
 
       updateTotal(remainingCart);
 
@@ -251,7 +251,7 @@ const VendaCardIsland = ({ produtos }: { produtos: Produto[] }) => {
           ))}
         </div>
         <div className="button-container">
-          <a href="/" className="button-primary">Voltar</a>
+          <a href="/menu" className="button-primary">Voltar</a>
         </div>
         {successMessage && (
           <div className="success-message">{successMessage}</div>

@@ -156,7 +156,7 @@ export default function NewCard(props: PageProps<CreatedCardResponse>) {
           </div>
           <div className="button-container">
             <a
-              href="/"
+              href="/menu"
               className="button-primary"
             >
               Voltar

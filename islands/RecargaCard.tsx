@@ -72,7 +72,7 @@ const RecargaCard = () => {
             <button type="submit" className="button-primary">Recarregar</button>
           </div>
           <div className="button-container">
-            <a href="/" className="button-primary">Voltar</a>
+            <a href="/menu" className="button-primary">Voltar</a>
           </div>
         </form>
         {message && <div className="message-box success-message">{message}

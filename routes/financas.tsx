@@ -79,7 +79,7 @@ const NegativeBalanceCards = (
       )}
       <div className="button-secondary-container">
         <a
-          href="/"
+          href="/menu"
           className="button-primary"
         >
           Voltar

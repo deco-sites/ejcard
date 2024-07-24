@@ -105,7 +105,7 @@ const ConsultaCard = (props: PageProps<QueryCardResponse>) => {
           </div>
           <div className="button-container">
             <a
-              href="/"
+              href="/menu"
               className="button-primary"
             >
               Voltar
