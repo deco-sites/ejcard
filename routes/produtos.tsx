@@ -88,10 +88,22 @@ export default function NewProduct(props: PageProps<CreatedProductResponse>) {
       <div className="message-box">
         {hasSuccess && props.data?.product && (
           <div className="success-message">
-            <span>
-              {`Produto ${props.data.product.produto} cadastrado com sucesso.`}
-            </span>
-            {JSON.stringify(props.data.product)}
+            <h2>Produto Cadastrado com Sucesso!</h2>
+            <div className="product-info">
+              <p>
+                <strong>Nome do Produto:</strong> {props.data.product.produto}
+              </p>
+              <p>
+                <strong>Preço:</strong> R${" "}
+                {(props.data.product.preço / 100).toFixed(2)}
+              </p>
+              <p>
+                <strong>Vendidos:</strong> {props.data.product.vendidos}
+              </p>
+              <p>
+                <strong>Data de Criação:</strong> {props.data.product.created_at}
+              </p>
+            </div>
           </div>
         )}
         {hasError && (
@@ -148,9 +160,7 @@ export default function NewProduct(props: PageProps<CreatedProductResponse>) {
           align-items: center;
           justify-content: center;
           height: 100vh;
-          background-color: rgba(220, 100, 100, 0.95); 
-
-
+          background-color: rgba(220, 100, 100, 0.95);
           padding: 16px;
         }
 
@@ -190,6 +200,11 @@ export default function NewProduct(props: PageProps<CreatedProductResponse>) {
           background-color: #D1FAE5;
           border: 1px solid #4ADE80;
           color: #065F46;
+        }
+
+        .product-info p {
+          margin: 8px 0;
+          font-size: 16px;
         }
 
         .error-message {
